@@ -1,8 +1,10 @@
 package co.edu.utp.isc.gia.restuser.web.controller;
 
+import co.edu.utp.isc.gia.restuser.exceptios.UserNotFoundException;
 import co.edu.utp.isc.gia.restuser.service.UserService;
 import co.edu.utp.isc.gia.restuser.web.dto.UserDto;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +36,13 @@ public class UserController {
     
     @GetMapping("/{id}")
     public UserDto findOne(@PathVariable("id") Long id) {
-        return userService.findOne(id);
+        UserDto user = null;
+        try {
+            user = userService.findOne(id);
+        } catch (NoSuchElementException k) {
+            throw new UserNotFoundException("User id : "+id+ " not Found" );
+        }
+        return user;
     }
     
     @PutMapping("/{id}")
