@@ -4,6 +4,7 @@ import co.edu.utp.isc.gia.restuser.web.dto.UserDto;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class UserService {
@@ -22,11 +23,22 @@ public class UserService {
         return user;
     }
     
-    public List<UserDto> listAll(){
+    public List<UserDto> listAll() {
         return users;
     }
     
-    public UserDto findOne(Long id){
+    public UserDto findOne(Long id) {
         return users.get(id.intValue() - 1);
     }
+    
+    public UserDto upDateOne(Long id, UserDto user) {
+        user.setId(id);        
+        users.set(id.intValue() - 1, user);
+        return users.get(id.intValue()-1);
+    }
+    
+    public UserDto removeOne(Long id) {
+        return users.remove(id.intValue()-1);
+    }
+    
 }
