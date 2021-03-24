@@ -31,7 +31,7 @@ public class UserService {
         return users.get(id.intValue() - 1);
     }
     
-    public UserDto upDateOne(Long id, UserDto user) {
+    public UserDto updateOne(Long id, UserDto user) {
         user.setId(id);        
         users.set(id.intValue() - 1, user);
         return users.get(id.intValue()-1);

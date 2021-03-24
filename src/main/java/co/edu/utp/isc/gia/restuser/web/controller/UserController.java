@@ -38,8 +38,8 @@ public class UserController {
     }
     
     @PutMapping("/{id}")
-    public UserDto upDateOne(@PathVariable Long id,@RequestBody UserDto user) {
-        return userService.upDateOne(id, user);
+    public UserDto updateOne(@PathVariable Long id,@RequestBody UserDto user) {
+        return userService.updateOne(id, user);
     }
     
     @DeleteMapping("/{id}")
