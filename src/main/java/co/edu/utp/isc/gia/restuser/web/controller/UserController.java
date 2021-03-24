@@ -36,13 +36,7 @@ public class UserController {
     
     @GetMapping("/{id}")
     public UserDto findOne(@PathVariable("id") Long id) {
-        UserDto user = null;
-        try {
-            user = userService.findOne(id);
-        } catch (NoSuchElementException k) {
-            throw new UserNotFoundException("User id : "+id+ " not Found" );
-        }
-        return user;
+        return userService.findOne(id);
     }
     
     @PutMapping("/{id}")
