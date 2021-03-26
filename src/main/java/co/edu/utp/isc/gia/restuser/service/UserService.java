@@ -1,66 +1,87 @@
 package co.edu.utp.isc.gia.restuser.service;
 
+import co.edu.utp.isc.gia.restuser.data.entity.User;
+import co.edu.utp.isc.gia.restuser.data.repository.UserRepository;
 import co.edu.utp.isc.gia.restuser.exceptios.UserNotFoundException;
 import co.edu.utp.isc.gia.restuser.web.dto.UserDto;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    
-    private List<UserDto> users = new ArrayList<>(); 
-    
 
+    private UserRepository userRepository;
+    private ModelMapper modelMapper = new ModelMapper();
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    
     public UserDto save(UserDto user) {
-        if(users.isEmpty()){
-            user.setId(1L);
-        }else{
-            user.setId(users.get(users.size()-1).getId() + 1L);
+        if (validateUser(user)){
+            User myUser = modelMapper.map(user, User.class);            
+            UserDto userDto =  modelMapper.map(userRepository.save(myUser), UserDto.class);
+            return userDto;
         }
-        users.add(user);
-        
-        return user;
+        return null;
     }
-    
+
     public List<UserDto> listAll() {
-        return users;
+        List<UserDto> usersDto = null;
+        List<User> users = (List<User>) userRepository.findAll();
+        if (users != null && !users.isEmpty() ) {
+            usersDto = new ArrayList<>();
+            for (User user : users) {
+                usersDto.add(modelMapper.map(user, UserDto.class));
+            }
+        }else{
+            throw new UserNotFoundException("Users not Found" );
+        }  
+        return usersDto;
     }
-    
+
     public UserDto findOne(Long id) {
-        int i = searchById(id, users);
-        if (i == -1) {
-            throw new UserNotFoundException("User id : "+id+ " not Found" );
+        Optional<User> user = userRepository.findById(id);
+        UserDto userDto = new UserDto();
+        if (user.isPresent()) {
+            
+            return modelMapper.map(user.get(), UserDto.class);
         }else{
-            return users.get(i);
-        }
+            throw new UserNotFoundException("User id : "+id+ " not Found" );
+        }            
+
+        
     }
-    
+
     public UserDto updateOne(Long id, UserDto user) {
-        int i = searchById(id, users);
-        if (i == -1) {
-            throw new UserNotFoundException("User id : "+id+ " not Found" );
-        }else{
-            user.setId(id);
-            users.set(i, user);        
-            return users.get(i);
-        }
+        user.setId(id);
+        userRepository.save(modelMapper.map(user, User.class));
+        return findOne(id);
     }
-    
+
     public UserDto removeOne(Long id) {
-        int i = searchById(id, users);
-        if (i == -1) {
-            throw new UserNotFoundException("User id : "+id+ " not Found" );
+        Optional<User> user = userRepository.findById(id);
+        UserDto userDto = new UserDto();
+        if (user.isPresent()) {
+            userDto = modelMapper.map(user.get(), UserDto.class);
+            userRepository.deleteById(id);
+            return userDto;
+            
         }else{
-            return users.remove(i);
+            throw new UserNotFoundException("User id : "+id+ " not Found" );
         }
     }
     
-    private int searchById (Long id, List<UserDto> users) {
-        for (int i=0; i<users.size(); i++) {
-            if (id.equals(users.get(i).getId())) return i;               
-        }
-        return -1;
+    private boolean validateUser(UserDto user){
+        return user != null && user.getUsername() != null  && !user.getUsername().isEmpty() 
+                && user.getPassword() != null  && !user.getPassword().isEmpty()
+                && user.getName() != null  && !user.getName().isEmpty()
+                && user.getEmail() != null  && !user.getEmail().isEmpty();
     }
-    
+
+
 }

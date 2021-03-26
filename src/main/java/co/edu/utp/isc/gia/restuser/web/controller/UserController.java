@@ -40,12 +40,12 @@ public class UserController {
     }
     
     @PutMapping("/{id}")
-    public UserDto updateOne(@PathVariable Long id,@RequestBody UserDto user) {
+    public UserDto updateOne(@PathVariable("id") Long id,@RequestBody UserDto user) {
         return userService.updateOne(id, user);
     }
     
     @DeleteMapping("/{id}")
-    public UserDto removeOne(@PathVariable Long id) {
+    public UserDto removeOne(@PathVariable("id") Long id) {
         return userService.removeOne(id);
     }
 }
