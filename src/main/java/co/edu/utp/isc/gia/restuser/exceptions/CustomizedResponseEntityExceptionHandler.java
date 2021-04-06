@@ -1,4 +1,4 @@
-package co.edu.utp.isc.gia.restuser.exceptios;
+package co.edu.utp.isc.gia.restuser.exceptions;
 
 import java.util.Date;
 import org.springframework.http.HttpStatus;
@@ -16,6 +16,12 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
             request.getDescription(false),HttpStatus.NOT_FOUND.getReasonPhrase());
         return new ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(BadRequestException.class)
+    public final ResponseEntity<ExceptionResponse> handleBadRequestException(UserNotFoundException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+            request.getDescription(false),HttpStatus.BAD_REQUEST.getReasonPhrase());
+        return new ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
 }

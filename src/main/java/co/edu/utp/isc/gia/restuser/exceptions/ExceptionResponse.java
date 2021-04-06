@@ -1,4 +1,4 @@
-package co.edu.utp.isc.gia.restuser.exceptios;
+package co.edu.utp.isc.gia.restuser.exceptions;
 
 import java.util.Date;
 

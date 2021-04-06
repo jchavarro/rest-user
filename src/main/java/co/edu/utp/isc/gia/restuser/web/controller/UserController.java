@@ -1,6 +1,6 @@
 package co.edu.utp.isc.gia.restuser.web.controller;
 
-import co.edu.utp.isc.gia.restuser.exceptios.UserNotFoundException;
+import co.edu.utp.isc.gia.restuser.exceptions.UserNotFoundException;
 import co.edu.utp.isc.gia.restuser.service.UserService;
 import co.edu.utp.isc.gia.restuser.web.dto.UserDto;
 import java.util.List;

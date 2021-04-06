@@ -2,7 +2,8 @@ package co.edu.utp.isc.gia.restuser.service;
 
 import co.edu.utp.isc.gia.restuser.data.entity.User;
 import co.edu.utp.isc.gia.restuser.data.repository.UserRepository;
-import co.edu.utp.isc.gia.restuser.exceptios.UserNotFoundException;
+import co.edu.utp.isc.gia.restuser.exceptions.BadRequestException;
+import co.edu.utp.isc.gia.restuser.exceptions.UserNotFoundException;
 import co.edu.utp.isc.gia.restuser.web.dto.UserDto;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,9 @@ public class UserService {
     private UserRepository userRepository;
     private ModelMapper modelMapper = new ModelMapper();
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
     }
 
     
@@ -26,8 +28,9 @@ public class UserService {
             User myUser = modelMapper.map(user, User.class);            
             UserDto userDto =  modelMapper.map(userRepository.save(myUser), UserDto.class);
             return userDto;
+        }else {
+            throw new BadRequestException("Usted es que es bobo metiendo usuarios nulos?");
         }
-        return null;
     }
 
     public List<UserDto> listAll() {
